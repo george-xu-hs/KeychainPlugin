@@ -31,95 +31,88 @@
     return self;
 }
 
-
 - (void) getForKey:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
-        NSArray* arguments = command.arguments;
-        CDVPluginResult* pluginResult = nil;
+    NSArray* arguments = command.arguments;
+    CDVPluginResult* pluginResult = nil;
+    
+    if ([arguments count] >= 2)
+    {
+        NSString* key = [arguments objectAtIndex:0];
+        NSString* serviceName = [arguments objectAtIndex:1];
+        NSError* error = nil;
         
-        if ([arguments count] >= 2)
-        {
-            NSString* key = [arguments objectAtIndex:0];
-            NSString* serviceName = [arguments objectAtIndex:1];
-            NSError* error = nil;
-            
-            NSString* value = [SFHFKeychainUtils getPasswordForUsername:key andServiceName:serviceName error:&error];
-            if (error == nil && value != nil) {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
-            } else {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                 messageAsString:[NSString stringWithFormat:@"error retrieving value for key '%@' : %@", key, [error localizedDescription]]];
-            }
-        }
-        else
-        {
+        NSString* value = [SFHFKeychainUtils getPasswordForUsername:key andServiceName:serviceName error:&error];
+        if (error == nil && value != nil) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:value];
+        } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                             messageAsString:@"incorrect number of arguments for getForkey"];
+                                             messageAsString:[NSString stringWithFormat:@"error retrieving value for key '%@' : %@", key, [error localizedDescription]]];
         }
-        
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }];
+    }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                         messageAsString:@"incorrect number of arguments for getForkey"];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) setForKey:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
-        NSArray* arguments = command.arguments;
-        CDVPluginResult* pluginResult = nil;
+    NSArray* arguments = command.arguments;
+    CDVPluginResult* pluginResult = nil;
+    
+    if ([arguments count] >= 3)
+    {
+        NSString* key = [arguments objectAtIndex:0];
+        NSString* serviceName = [arguments objectAtIndex:1];
+        NSString* value = [arguments objectAtIndex:2];
+        NSError* error = nil;
         
-        if ([arguments count] >= 3)
-        {
-            NSString* key = [arguments objectAtIndex:0];
-            NSString* serviceName = [arguments objectAtIndex:1];
-            NSString* value = [arguments objectAtIndex:2];
-            NSError* error = nil;
-            
-            BOOL stored = [SFHFKeychainUtils storeUsername:key andPassword:value forServiceName:serviceName updateExisting:YES error:&error];
-            if (stored && error == nil) {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            } else {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-            }
+        BOOL stored = [SFHFKeychainUtils storeUsername:key andPassword:value forServiceName:serviceName updateExisting:YES error:&error];
+        if (stored && error == nil) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         }
-        else
-        {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                             messageAsString:@"incorrect number of arguments for setForKey"];
-        }
+    }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                         messageAsString:@"incorrect number of arguments for setForKey"];
+    }
 
-        
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) removeForKey:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
-        NSArray* arguments = command.arguments;
-        CDVPluginResult* pluginResult = nil;
+    NSArray* arguments = command.arguments;
+    CDVPluginResult* pluginResult = nil;
+    
+    if ([arguments count] >= 2)
+    {
+        NSString* key = [arguments objectAtIndex:0];
+        NSString* serviceName = [arguments objectAtIndex:1];
+        NSError* error = nil;
         
-        if ([arguments count] >= 2)
-        {
-            NSString* key = [arguments objectAtIndex:0];
-            NSString* serviceName = [arguments objectAtIndex:1];
-            NSError* error = nil;
-            
-            BOOL deleted = [SFHFKeychainUtils deleteItemForUsername:key andServiceName:serviceName error:&error];
-            if (deleted && error == nil) {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            } else {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-            }
+        BOOL deleted = [SFHFKeychainUtils deleteItemForUsername:key andServiceName:serviceName error:&error];
+        if (deleted && error == nil) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         }
-        else
-        {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                             messageAsString:@"incorrect number of arguments for removeForKey"];
-        }
-        
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }];
+    }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                         messageAsString:@"incorrect number of arguments for removeForKey"];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 

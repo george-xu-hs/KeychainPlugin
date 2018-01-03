@@ -1,2 +1,13 @@
-<plugin id="com.shazron.cordova.plugin.keychainutil">
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="com.shazron.cordova.plugin.keychainutil"
+    version="1.0.0">
+
+ 
+    
+    <engines>
+        <engine name="cordova" version=">=2.2.0" />
+    </engines>
+	
+
 </plugin>
